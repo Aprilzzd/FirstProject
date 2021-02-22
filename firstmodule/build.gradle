@@ -1,0 +1,65 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion 30
+    buildToolsVersion "30.0.3"
+    defaultConfig {
+        minSdkVersion 19
+        targetSdkVersion 30
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kapt {
+        arguments {
+            arg("AROUTER_MODULE_NAME", project.getName())
+            arg("AROUTER_GENERATE_DOC", "enable")
+        }
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+    api 'com.android.base:basemodule:1.0.0-SNAPSHOT'
+    kapt 'com.alibaba:arouter-compiler:1.2.2'
+}
+
+apply plugin: 'maven'
+
+uploadArchives{
+    repositories.mavenDeployer{
+        // 配置本地仓库路径，项目根目录下的repository目录中
+//        repository(url: "file://D://maven")
+        repository(url: 'https://packages.aliyun.com/maven/repository/2076819-release-SJVQ0p/') {
+            authentication(
+                    userName: '602f8ad095a53539a7208ecc',
+                    password: '9mK]BYqDAO8u'
+            )
+        }
+        snapshotRepository(url: 'https://packages.aliyun.com/maven/repository/2076819-snapshot-IqxpeD/') {
+            authentication(
+                    userName: '602f8ad095a53539a7208ecc',
+                    password: '9mK]BYqDAO8u'
+            )
+        }
+        pom.groupId = "com.android.firstmodule"// 唯一标识（通常为模块包名，也可以任意）
+        pom.artifactId = "firstmodule" // 项目名称（通常为类库模块名称，也可以任意）
+        pom.version = "1.0.0-SNAPSHOT" // 版本号
+    }
+}
